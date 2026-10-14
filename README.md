@@ -30,4 +30,4 @@ Our project proposes a centralized control plane for monitoring and managing vir
 The `src` folder contains the project source code and related resources.
 
 ## Project Video
-The team introduction video link will be added here after uploading it to YouTube.
+https://youtu.be/dcj1pGfv608
