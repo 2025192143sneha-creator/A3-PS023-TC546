@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS | AIORI-3 PS-023</title>
+<style>
+:root {
+  --bg:#f3f6fc; --panel:#fff; --text:#17213a;
+  --muted:#748099; --border:#e2e8f2; --accent:#6759e8;
+  --soft:#eeecff; --green:#159b75;
+}
+body.dark {
+  --bg:#0b1020; --panel:#151d30; --text:#edf2ff;
+  --muted:#9ca9c5; --border:#29354b; --accent:#a49aff;
+  --soft:#28234a; --green:#42d9a2;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font:14px Inter,Segoe UI,Arial,sans-serif;transition:.2s}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:240px;background:var(--panel);border-right:1px solid var(--border);
+padding:25px 16px;flex-shrink:0}
+.brand{font-size:23px;font-weight:800;letter-spacing:2px;color:var(--accent)}
+.brand small{display:block;font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:6px}
+.navtitle{font-size:10px;color:var(--muted);margin:32px 10px 12px;letter-spacing:1.5px}
+.nav{display:block;width:100%;padding:13px 12px;margin:4px 0;border:0;
+background:transparent;color:var(--muted);text-align:left;border-radius:9px}
+.nav:hover,.nav.active{background:var(--soft);color:var(--accent)}
+.sidebarfoot{margin-top:35px;padding:12px;border:1px solid var(--border);
+border-radius:10px;font-size:12px;color:var(--muted);line-height:1.8}
+main{flex:1;min-width:0;padding:28px 4%;max-width:1600px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:27px;margin:0 0 7px}
+h2{font-size:17px;margin:0 0 18px}
+p{line-height:1.6}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.topactions{display:flex;gap:9px;align-items:center}
+.btn{border:1px solid var(--border);border-radius:9px;padding:10px 14px;
+background:var(--panel);color:var(--text)}
+.btn.primary{background:var(--accent);color:white;border-color:var(--accent)}
+.btn:hover{filter:brightness(.96)}
+.page{display:none;margin-top:30px}
+.page.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin:22px 0}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;min-width:0}
+.metric{font-size:29px;font-weight:750;margin:15px 0 7px}
+.metriclabel{font-size:12px;color:var(--muted)}
+.positive{color:var(--green)}
+.two{display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+.barline{display:flex;justify-content:space-between;margin:17px 0 7px;font-size:12px}
+.bar{height:7px;border-radius:8px;background:var(--border);overflow:hidden}
+.bar span{display:block;height:100%;background:var(--accent);border-radius:8px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;white-space:nowrap}
+th,td{text-align:left;padding:14px 12px;border-bottom:1px solid var(--border)}
+th{font-size:11px;color:var(--muted);font-weight:600}
+td{font-size:13px}
+.status{display:inline-block;padding:5px 9px;border-radius:20px;
+background:#d9f7e9;color:#087752;font-size:11px}
+.status.warn{background:#fff0cc;color:#956400}
+.status.off{background:var(--border);color:var(--muted)}
+.tag{display:inline-block;background:var(--soft);color:var(--accent);
+padding:5px 8px;border-radius:6px;font-size:11px}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;
+gap:12px;flex-wrap:wrap;margin-bottom:18px}
+input,select{padding:10px;border:1px solid var(--border);border-radius:8px;
+background:var(--panel);color:var(--text);max-width:100%}
+.field{display:flex;flex-direction:column;gap:7px;margin:15px 0}
+.field label{font-size:12px;color:var(--muted)}
+.activity{padding:15px 0;border-bottom:1px solid var(--border);display:flex;gap:12px}
+.dot{width:9px;height:9px;background:var(--green);border-radius:50%;margin-top:5px;flex-shrink:0}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;
+padding:20px;background:radial-gradient(ellipse at top left,#292064 0%,#10152a 50%,#080c18 100%);color:white}
+.loginbox{width:100%;max-width:420px;padding:34px;background:#151c31;
+border:1px solid #303955;border-radius:18px}
+.loginbox input{width:100%;background:#0d1427;color:white;border-color:#34405c}
+.loginbox .field label{color:#b7c1dc}
+.loginbox p{color:#a8b5d3}
+.loginbox .btn{width:100%;margin-top:12px}
+.notice{background:var(--soft);padding:14px;border-radius:10px;line-height:1.7}
+.footer{margin-top:30px;color:var(--muted);font-size:11px;text-align:center}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}}
+@media(max-width:650px){.layout{display:block}.sidebar{width:100%;padding:16px;border-right:0;border-bottom:1px solid var(--border)}
+.navtitle,.sidebarfoot{display:none}.navs{display:flex;overflow-x:auto;gap:4px;margin-top:15px}
+.nav{width:auto;white-space:nowrap;margin:0;padding:10px}.grid{grid-template-columns:1fr 1fr}
+main{padding:20px 14px}h1{font-size:23px}.card{padding:15px}.metric{font-size:24px}}
+</style>
+</head>
+<body>
+
+<section id="login" class="login">
+  <div class="loginbox">
+    <div class="brand">NEXUS <small>AIORI-3 · PS-023 · DEBUG CREW</small></div>
+    <h1 style="margin-top:32px">Cloud Control Center</h1>
+    <p>Secure interface for a two-node cloud hypervisor controller prototype.</p>
+    <form id="loginForm">
+      <div class="field"><label>Email address</label>
+        <input id="email" type="email" value="operator@nexus.demo" required></div>
+      <div class="field"><label>Password</label>
+        <input id="password" type="password" value="nexus-demo" required></div>
+      <button class="btn primary" type="submit">Sign in to NEXUS →</button>
+    </form>
+    <p class="small">Demo login: operator@nexus.demo<br>Password: nexus-demo</p>
+    <p class="small">Educational prototype. Authentication and cloud actions are simulated.</p>
+  </div>
+</section>
+
+<div id="app" class="layout" style="display:none">
+<aside class="sidebar">
+  <div class="brand">NEXUS<small>AIORI-3 / PS-023</small></div>
+  <div class="navtitle">CONTROL CENTER</div>
+  <div class="navs">
+    <button class="nav active" data-page="overview">◈ &nbsp; Overview</button>
+    <button class="nav" data-page="nodes">▦ &nbsp; Cloud Nodes</button>
+    <button class="nav" data-page="vms">▣ &nbsp; Virtual Machines</button>
+    <button class="nav" data-page="resources">◉ &nbsp; Resources</button>
+    <button class="nav" data-page="activity">☷ &nbsp; Activity Logs</button>
+    <button class="nav" data-page="settings">⚙ &nbsp; Settings</button>
+  </div>
+  <div class="sidebarfoot">
+    <strong>PS-023 PROJECT</strong><br>
+    Two-Node Hypervisor Controller<br>
+    <span class="positive">● Demo environment online</span>
+  </div>
+</aside>
+
+<main>
+  <header class="topbar">
+    <div>
+      <div class="muted small">AIORI-3 HACKATHON / DEBUG CREW</div>
+      <h1 id="pageTitle">Overview</h1>
+      <div class="muted small">Monitor and manage your demo infrastructure.</div>
+    </div>
+    <div class="topactions">
+      <button class="btn" id="themeBtn">☾ Dark mode</button>
+      <button class="btn" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
+  <section class="page active" id="overview">
+    <div class="notice"><strong>Welcome to NEXUS.</strong>
+      Your two-node cloud environment is running in demo mode.
+      Review infrastructure status, VM inventory and resource utilization below.</div>
+    <div class="grid">
+      <div class="card"><div class="metriclabel">TOTAL NODES</div><div class="metric">02</div><span class="positive small">● Both registered</span></div>
+      <div class="card"><div class="metriclabel">VIRTUAL MACHINES</div><div class="metric" id="vmCount">04</div><span class="positive small">● Inventory loaded</span></div>
+      <div class="card"><div class="metriclabel">RUNNING VMs</div><div class="metric" id="runningCount">03</div><span class="positive small">● Demo status</span></div>
+      <div class="card"><div class="metriclabel">CLUSTER HEALTH</div><div class="metric">98.5%</div><span class="positive small">● Sample metric</span></div>
+    </div>
+    <div class="two">
+      <div class="card"><h2>Infrastructure utilization</h2>
+        <div class="barline"><span>CPU usage</span><strong>42%</strong></div><div class="bar"><span style="width:42%"></span></div>
+        <div class="barline"><span>Memory usage</span><strong>67%</strong></div><div class="bar"><span style="width:67%"></span></div>
+        <div class="barline"><span>Storage usage</span><strong>38%</strong></div><div class="bar"><span style="width:38%"></span></div>
+        <p class="muted small">Illustrative readings, not live hardware telemetry.</p>
+      </div>
+      <div class="card"><h2>Cluster health</h2>
+        <div class="activity"><div class="dot"></div><div><strong>Node Alpha</strong><div class="muted small">192.168.1.10 · Healthy</div></div><span class="status">Online</span></div>
+        <div class="activity"><div class="dot"></div><div><strong>Node Beta</strong><div class="muted small">192.168.1.11 · Healthy</div></div><span class="status">Online</span></div>
+        <p class="muted small">Last demo refresh: <span id="refreshTime">Just now</span></p>
+        <button class="btn" onclick="refreshData()">↻ Refresh demo data</button>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px"><h2>Recent virtual machines</h2><div class="tablewrap">
+      <table><thead><tr><th>VM NAME</th><th>NODE</th><th>CPU</th><th>MEMORY</th><th>STATUS</th></tr></thead>
+      <tbody id="overviewTable"></tbody></table></div></div>
+  </section>
+
+  <section class="page" id="nodes">
+    <div class="notice">Two-node reference cluster for demonstrating centralized hypervisor management.</div>
+    <div class="grid">
+      <div class="card"><div class="tag">NODE 01</div><h2 style="margin-top:15px">Node Alpha</h2><div class="metric">Online</div><p class="muted">IP: 192.168.1.10</p><span class="status">Healthy</span></div>
+      <div class="card"><div class="tag">NODE 02</div><h2 style="margin-top:15px">Node Beta</h2><div class="metric">Online</div><p class="muted">IP: 192.168.1.11</p><span class="status">Healthy</span></div>
+    </div>
+    <div class="card"><h2>Node specifications</h2><div class="tablewrap"><table>
+      <thead><tr><th>NODE</th><th>VCPU CAPACITY</th><th>MEMORY</th><th>HYPERVISOR</th><th>STATUS</th></tr></thead>
+      <tbody><tr><td>Alpha</td><td>16 cores</td><td>32 GB</td><td>KVM (planned)</td><td><span class="status">Registered</span></td></tr>
+      <tr><td>Beta</td><td>16 cores</td><td>32 GB</td><td>KVM (planned)</td><td><span class="status">Registered</span></td></tr></tbody>
+    </table></div><p class="muted small">Specifications are reference values for the prototype.</p></div>
+  </section>
+
+  <section class="page" id="vms">
+    <div class="sectionhead"><div><h2>Virtual machine inventory</h2><div class="muted small">Create and manage simulated VM records.</div></div>
+      <button class="btn primary" onclick="createVM()">+ Create VM</button></div>
+    <div class="card"><div class="tablewrap"><table>
+      <thead><tr><th>VM NAME</th><th>NODE</th><th>VCPU</th><th>RAM</th><th>STATUS</th><th>ACTION</th></tr></thead>
+      <tbody id="vmTable"></tbody>
+    </table></div></div>
+    <p class="muted small">Start/stop controls update the local demonstration state only.</p>
+  </section>
+
+  <section class="page" id="resources">
+    <div class="grid">
+      <div class="card"><div class="metriclabel">CPU CAPACITY</div><div class="metric">32 vCPU</div><div class="muted small">16 per node</div></div>
+      <div class="card"><div class="metriclabel">TOTAL MEMORY</div><div class="metric">64 GB</div><div class="muted small">32 GB per node</div></div>
+      <div class="card"><div class="metriclabel">STORAGE POOL</div><div class="metric">2 TB</div><div class="muted small">Reference capacity</div></div>
+      <div class="card"><div class="metriclabel">NETWORK</div><div class="metric">1 Gbps</div><div class="muted small">Illustrative bandwidth</div></div>
+    </div>
+    <div class="card"><h2>Resource allocation</h2>
+      <div class="barline"><span>CPU allocated</span><strong>42% · 13.4 / 32 vCPU</strong></div><div class="bar"><span style="width:42%"></span></div>
+      <div class="barline"><span>Memory allocated</span><strong>67% · 42.9 / 64 GB</strong></div><div class="bar"><span style="width:67%"></span></div>
+      <div class="barline"><span>Storage allocated</span><strong>38% · 0.76 / 2 TB</strong></div><div class="bar"><span style="width:38%"></span></div>
+    </div>
+    <div class="card" style="margin-top:16px"><h2>Monitoring methodology</h2><p>In a connected deployment, the controller would collect host metrics, track VM allocation, validate available capacity and expose resource usage through a monitoring API.</p><span class="tag">Future backend integration</span></div>
+  </section>
+
+  <section class="page" id="activity">
+    <div class="sectionhead"><div><h2>Audit & activity trail</h2><div class="muted small">Sample events for the prototype.</div></div>
+      <button class="btn" onclick="exportLogs()">↓ Export CSV</button></div>
+    <div class="card"><div id="logList"></div></div>
+  </section>
+
+  <section class="page" id="settings">
+    <div class="card"><h2>Appearance</h2><p class="muted">Choose your preferred dashboard theme.</p>
+      <button class="btn" onclick="setTheme('light')">☀ Day mode</button>
+      <button class="btn" onclick="setTheme('dark')">☾ Dark mode</button>
+    </div>
+    <div class="card" style="margin-top:16px"><h2>Project information</h2>
+      <p><strong>Project:</strong> NEXUS — Two-Node Cloud Hypervisor VM Controller</p>
+      <p><strong>Hackathon:</strong> AIORI-3</p><p><strong>Problem ID:</strong> PS-023</p>
+      <p><strong>Team:</strong> Debug Crew</p><p><strong>Institution:</strong> Sharda University</p>
+      <p><strong>Frontend:</strong> HTML, CSS and JavaScript</p>
+      <p><strong>Data mode:</strong> Local sample data</p>
+    </div>
+    <div class="card" style="margin-top:16px"><h2>Security & deployment</h2>
+      <p>This standalone demonstration does not provide production authentication, persistent storage or real hypervisor access.</p>
+      <p>For production, use a protected backend, server-side authorization, secure sessions, validated APIs and an authenticated hypervisor service.</p>
+    </div>
+  </section>
+  <div class="footer">NEXUS · AIORI-3 · PS-023 · Prototype build 1.0<br>Demonstration data only — no real infrastructure is controlled.</div>
+</main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let vms = [
+ {name:"web-server-01",node:"Alpha",cpu:4,ram:8,status:"Running"},
+ {name:"database-01",node:"Beta",cpu:4,ram:16,status:"Running"},
+ {name:"test-instance-01",node:"Alpha",cpu:2,ram:4,status:"Stopped"},
+ {name:"api-server-01",node:"Beta",cpu:2,ram:8,status:"Running"}
+];
+let logs = [
+ {time:"10:42:12",message:"Cluster status checked",type:"INFO"},
+ {time:"10:38:05",message:"VM database-01 inventory loaded",type:"INFO"},
+ {time:"10:30:44",message:"Node Beta registered in demo inventory",type:"INFO"},
+ {time:"10:25:18",message:"NEXUS dashboard session started",type:"AUTH"}
+];
+
+function setTheme(theme){
+ document.body.classList.toggle("dark",theme==="dark");
+ $("themeBtn").textContent=theme==="dark"?"☀ Day mode":"☾ Dark mode";
+}
+$("themeBtn").onclick=()=>{
+ setTheme(document.body.classList.contains("dark")?"light":"dark");
+};
+$("loginForm").onsubmit=e=>{
+ e.preventDefault();
+ if($("email").value==="operator@nexus.demo" && $("password").value==="nexus-demo"){
+  $("login").style.display="none";$("app").style.display="flex";
+  addLog("Demo user signed in","AUTH");render();
+ }else alert("Invalid demo credentials. Use the credentials shown on the login page.");
+};
+$("logoutBtn").onclick=()=>{
+ $("app").style.display="none";$("login").style.display="flex";
+ $("password").value="nexus-demo";
+};
+document.querySelectorAll(".nav").forEach(btn=>btn.onclick=()=>showPage(btn.dataset.page));
+function showPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));
+ document.querySelectorAll(".nav").forEach(n=>n.classList.toggle("active",n.dataset.page===id));
+ const titles={overview:"Overview",nodes:"Cloud Nodes",vms:"Virtual Machines",resources:"Resource Monitoring",activity:"Activity Logs",settings:"Settings"};
+ $("pageTitle").textContent=titles[id]||"Overview";
+}
+function addLog(message,type="INFO"){
+ const d=new Date();
+ logs.unshift({time:d.toLocaleTimeString("en-GB"),message,type});
+}
+function render(){
+ $("vmCount").textContent=String(vms.length).padStart(2,"0");
+ $("runningCount").textContent=String(vms.filter(v=>v.status==="Running").length).padStart(2,"0");
+ const rows=vms.map((v,i)=>`<tr><td><strong>${v.name}</strong></td><td>${v.node}</td><td>${v.cpu} vCPU</td><td>${v.ram} GB</td><td><span class="status ${v.status==="Stopped"?"off":""}">${v.status}</span></td><td><button class="btn" onclick="toggleVM(${i})">${v.status==="Running"?"Stop":"Start"}</button></td></tr>`).join("");
+ $("vmTable").innerHTML=rows;
+ $("overviewTable").innerHTML=vms.slice(0,4).map(v=>`<tr><td>${v.name}</td><td>${v.node}</td><td>${v.cpu}</td><td>${v.ram} GB</td><td><span class="status ${v.status==="Stopped"?"off":""}">${v.status}</span></td></tr>`).join("");
+ $("logList").innerHTML=logs.map(l=>`<div class="activity"><div class="dot"></div><div><strong>${l.message}</strong><div class="muted small">${l.time} · ${l.type}</div></div></div>`).join("");
+}
+function toggleVM(i){
+ vms[i].status=vms[i].status==="Running"?"Stopped":"Running";
+ addLog(vms[i].name+" marked "+vms[i].status+" (simulation)");
+ render();
+}
+function createVM(){
+ if(vms.length>=20){alert("Demo limit reached (20 VMs).");return;}
+ const name=prompt("Enter a name for the new demo VM:","demo-vm-"+(vms.length+1));
+ if(!name||!name.trim())return;
+ if(vms.some(v=>v.name===name.trim())){alert("That VM name already exists.");return;}
+ vms.push({name:name.trim(),node:vms.length%2===0?"Alpha":"Beta",cpu:2,ram:4,status:"Stopped"});
+ addLog("Created simulated VM record: "+name.trim());
+ render();
+}
+function refreshData(){
+ $("refreshTime").textContent=new Date().toLocaleTimeString();
+ addLog("Dashboard demo data refreshed");
+ render();
+}
+function exportLogs(){
+ const rows=[["Time","Event","Type"],...logs.map(l=>[l.time,l.message,l.type])];
+ const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(",")).join("\n");
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+ a.download="nexus-activity-logs.csv";a.click();URL.revokeObjectURL(a.href);
+}
+render();
+</script>
+</body>
+</html>
